@@ -54,6 +54,22 @@ steps:
     projects: '**/*.Tests.csproj'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Create code coverage report)'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'run reportgenerator -reports:$(Build.SourceDirectory)/Tailspin.SpaceGame.Web.Tests/TestResults/Coverage/Coverage.cobertura.xml -targetdir:$(Build.SourceDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
+
+- task: PublshCodeCoverageResults@1
+  displayName: 'Publish code coverage report)'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(Build.SourceDirectory)/**/coverage.cobertura.xml'
+
+
+- task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
     command: 'publish'
