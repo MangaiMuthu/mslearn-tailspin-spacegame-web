@@ -38,7 +38,8 @@ steps:
    command: 'restore'
    project: '**/*.csproj'
 - task: DotNetCoreCLI@2
-  dsplayName: 'Build the prohect - Release'
+  displayName: 'Build the prohect - Release'
+
   inputs:
    command: 'build'
    arguments: '--no-restore -- configuration Release'
