@@ -62,7 +62,7 @@ steps:
     publishTestResults: true
     projects: '**/*.Tests.csproj'
 
-- task: PublshCodeCoverageResults@1
+- task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report)'
   inputs:
     codeCoverageTool: 'cobertura'
