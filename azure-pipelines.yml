@@ -8,9 +8,9 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-20.04'
-
-variables:
-  buildConfiguration: 'Release'
+  demands: 
+   - npm
+ 
 
 steps:
 - task: UseDotNet@2
@@ -18,10 +18,12 @@ steps:
   inputs:
    packageType: sdk 
    version: '5.x'
+
 - task: Npm@1
   displayName: 'Run npm install'
   inputs:
    verbose: false
+
 - script: './node_modules/.bin/node-sass Tailspin.SpaceGame.Web/wwwroot --output Tailspin.SpaceGame.Web/wwwroot'
   displayName: 'Compile Sass assets'
 
@@ -37,10 +39,22 @@ steps:
   inputs:
    command: 'restore'
    project: '**/*.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the prohect - Release'
-
   inputs:
    command: 'build'
    arguments: '--no-restore -- configuration Release'
    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the prohect - Release'
+  inputs:
+   command: 'publish'
+   publishWebProjects: false
+   arguments: '--no-build --configuration Release --output $(Build.ArtifactStagingDirectory)/Release'
+   zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  condition: succeeded()
